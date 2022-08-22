@@ -26,9 +26,12 @@ function verifyIfExistsAccountCPF(req: express.Request, res: express.Response, n
   req.body.customer = customer;
   return next();
 }
-
+interface AccountRequest {
+  cpf: string;
+  name: string;
+}
 app.post("/account", (req, res) => {
-    const { cpf, name } = req.body; 
+    const { cpf, name } = req.body as AccountRequest;; 
     
     const customerAlreadyExists = customers.find(
         costumers => customers.some(
