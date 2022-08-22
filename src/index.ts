@@ -2,13 +2,18 @@ import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
-
-const customers = [];
+interface Customer {
+  id: string;
+  name: string;
+  cpf: string;
+  statement: string[];
+}
+const customers: Customer[] = [];
 
 app.use(express.json());
 
 //middlewares
-function verifyIfExistsAccountCPF(req, res, next) {
+function verifyIfExistsAccountCPF(req: express.Request, res: express.Response, next: express.NextFunction) {
   const { cpf } = req.headers;
 
   const customer = customers.find(
@@ -18,7 +23,7 @@ function verifyIfExistsAccountCPF(req, res, next) {
     return res.status(400).json({ error: "Costumer not found" });
   }
 
-  req.customer = customer;
+  req.body.customer = customer;
   return next();
 }
 
@@ -40,14 +45,15 @@ app.post("/account", (req, res) => {
         id: uuidv4(),
         statement: []
     });
-
-
-
     return res.status(201).send();
 });
 
-app.get("/statement", verifyIfExistsAccountCPF, (req, res) => { 
-  const { customer } = req;
+
+interface StatementRequest {
+  customer: Customer;
+}
+  app.get("/statement", verifyIfExistsAccountCPF, (req, res) => { 
+  const { customer } = req.body as StatementRequest;
   return res.json(customer.statement);
 });
 app.listen(3333);
