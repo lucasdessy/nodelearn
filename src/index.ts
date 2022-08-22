@@ -47,7 +47,7 @@ app.post("/account", (req, res) => {
 });
 
 app.get("/statement", verifyIfExistsAccountCPF, (req, res) => { 
-  const { customer } = req;
+  const { customer } = req.body;
   return res.json(customer.statement);
 });
 app.listen(3333);
