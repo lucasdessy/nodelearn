@@ -51,7 +51,6 @@ app.post("/account", (req, res) => {
     return res.status(201).send();
 });
 
-
 interface StatementRequest {
   customer: Customer;
 }
